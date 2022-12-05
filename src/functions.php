@@ -48,4 +48,25 @@
         return $user;
     }
 
+    function login_account($email, $password) {
+        global $connection;
+        $user = [];
+
+        $query = "SELECT * FROM `users` WHERE `users`.`email`= '".escape_string($email)."' LIMIT 1"; 
+        $result = mysqli_query($connection, $query);
+        $row = mysqli_fetch_array($result);
+
+        if(!empty($row)) {
+            $hashed_password = md5(md5($row['id'] . $password));
+           
+            if($hashed_password == $row['password']) {
+                $user = [
+                    "id" => $row['id'],
+                    "name" => $row['name']
+                ];
+            }
+        }
+
+        return $user;
+    }
 ?>
