@@ -12,7 +12,7 @@
         </li>
         <?php } else { ?>
         <li>
-            <a href="#">My blogs</a>
+            <a href="my-blogs.php">My blogs</a>
         </li>
         <li>
             <a href="logout.php?logout=true">Logout</a>
