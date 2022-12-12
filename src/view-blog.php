@@ -21,10 +21,12 @@
                                 <span class="category"><?= $blog['category_name'] ?></span>
                                 <p class="information">Word from : <?= $blog['name'] ?> (<?= $blog['email'] ?>)</p>
                                 <div class="actions">
+                                    <?php if(is_owner($_SESSION['id'], $blog['user_id'])) { ?>
                                     <p>
                                         <a href="edit-blog.php?id=<?= $blog['blog_id'] ?>">[ Edit ]</a>
-                                        <a id="btn-delete" href="#">[ Delete ]</a>
+                                        <a id="btn-delete" href="#" data-id="<?= $blog['blog_id'] ?>">[ Delete ]</a>
                                     </p>
+                                    <?php } ?>
                                 </div>
                                 <div id="view-blog">
                                    <?= nl2br($blog['body']) ?>

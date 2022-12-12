@@ -36,7 +36,7 @@
             if(mysqli_query($connection, $query)) {
                 $query = "SELECT * FROM `users` WHERE `users`.`id` = '".$id."' AND `users`.`password` = '".escape_string($encrypted_password)."'";
                 $result = mysqli_query($connection, $query);
-                $row = mysqli_fetch_array($result);
+                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
                 $user = [
                     "id" => $row['id'],
@@ -54,7 +54,7 @@
 
         $query = "SELECT * FROM `users` WHERE `users`.`email`= '".escape_string($email)."' LIMIT 1"; 
         $result = mysqli_query($connection, $query);
-        $row = mysqli_fetch_array($result);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 
         if(!empty($row)) {
             $hashed_password = md5(md5($row['id'] . $password));
@@ -145,7 +145,7 @@
         global $connection;
         $blog = [];
 
-        $query = "SELECT `b`.`id` as blog_id, `b`.`title`, `b`.`body`,  `b`.`category_id`, `c`.`category_name`, `u`.`name`, `u`.`email` FROM `blogs` as `b` INNER JOIN `users` as `u` ON `u`.`id` = `b`.`user_id` INNER JOIN `categories` as `c` ON `c`.`id` = `b`.`category_id` WHERE `b`.`id` = '".mysqli_real_escape_string($connection, $id)."'";
+        $query = "SELECT `b`.`id` as blog_id, `b`.`title`, `b`.`body`, `b`.`user_id`,  `b`.`category_id`, `c`.`category_name`, `u`.`name`, `u`.`email` FROM `blogs` as `b` INNER JOIN `users` as `u` ON `u`.`id` = `b`.`user_id` INNER JOIN `categories` as `c` ON `c`.`id` = `b`.`category_id` WHERE `b`.`id` = '".mysqli_real_escape_string($connection, $id)."'";
 
         $result = mysqli_query($connection, $query);
         $rows = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -155,5 +155,51 @@
         } 
 
         return $blog;
+    }
+
+    function get_all_blogs() {
+        global $connection;
+        $blogs = [];
+
+        $query = "SELECT `b`.`id` as `blog_id`, `b`.`title`, `b`.`body`, `c`.`category_name`, `u`.`email`, `b`.`date_created`, `u`.`name` FROM `blogs` as `b` INNER JOIN `categories` as `c` ON `c`.`id` = `b`.`category_id` INNER JOIN `users` as `u` ON `u`.`id` = `b`.`user_id` ORDER BY `b`.`id` DESC";
+        $result = mysqli_query($connection, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+           $blogs = $result;
+        } 
+
+        return $blogs;        
+    }
+
+    function get_blogs_by_category($category_id) {
+        global $connection;
+        $blogs = [];
+
+        $query = "SELECT `b`.`id` as `blog_id`, `b`.`title`, `b`.`body`, `c`.`category_name`, `u`.`email`, `b`.`date_created`, `u`.`name` FROM `blogs` as `b` INNER JOIN `categories` as `c` ON `c`.`id` = `b`.`category_id` INNER JOIN `users` as `u` ON `u`.`id` = `b`.`user_id` WHERE `b`.`category_id` = '".escape_string($category_id)."' ORDER BY `b`.`id` DESC";
+        $result = mysqli_query($connection, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+           $blogs = $result;
+        } 
+
+        return $blogs;
+    }
+    
+    function update_blog($id, $title, $body, $category_id) {
+        global $connection;
+        $flag = false;
+
+        $last_updated = date('Y-m-d H:i:s');
+        $query = "UPDATE `blogs` as `b` SET `b`.`title` = '".escape_string($title)."', `b`.`body` = '".escape_string($body)."', `b`.`category_id` = '".escape_string($category_id)."', `b`.`last_updated` = '".$last_updated."' WHERE `b`.`id` = '".escape_string($id)."'";
+        
+        if (mysqli_query($connection, $query)) {
+            $flag = true;
+        }
+        
+        return $flag;
+    }
+
+    function is_owner($current_user, $blog_user_id) {
+        return ($current_user == $blog_user_id) ? true : false;
     }
 ?>

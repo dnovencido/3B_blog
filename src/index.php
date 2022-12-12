@@ -1,3 +1,10 @@
+<?php 
+    include "session.php";
+
+    if(isset($_SESSION['id'])) {
+        header('Location: feed.php');
+    }
+?>
 <?php include "layouts/_header.php"; ?>
             <header>
                 <?php include "layouts/_navigation.php"; ?>

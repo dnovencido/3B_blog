@@ -3,7 +3,7 @@
         <a href="/"><img src="img/logo.png" alt="Blog logo" width="100%"></a>
     </div>
     <ul id="menu">
-        <?php if(!isset($_SESSION)) { ?>
+        <?php if(!isset($_SESSION['id'])) { ?>
         <li>
             <a href="#">Browse blogs</a> 
         </li>

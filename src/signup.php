@@ -25,7 +25,7 @@
                     $_SESSION['id'] = $user['id'];
                     $_SESSION['name'] = $user['name'];
     
-                    header("Location: account.php");
+                    header("Location: feed.php");
                 } else {
                     $errors[] = "There was an error logging in your account.";
                 }

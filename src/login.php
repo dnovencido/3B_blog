@@ -20,7 +20,7 @@
                 $_SESSION['id'] = $user['id'];
                 $_SESSION['name'] = $user['name'];
 
-                header("Location: account.php");
+                header("Location: feed.php");
             } else {
                 $errors[] = "The email address or password that you've entered does not match any account.";
             }
@@ -33,8 +33,8 @@
             </header>
             <section>
                 <div class="container">
-                    <div id="login">
-                        <div id="login-form">
+                    <div id="register">
+                        <div id="register-form">
                             <h1>Login your account.</h1>
                             <?php if(!empty($errors)) { ?>
                                 <?php include "layouts/_error-messages.php" ?>
