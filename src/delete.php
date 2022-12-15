@@ -1,5 +1,7 @@
 <?php
     include "function.php";
+    include "session.php";
+    
     $result = [];
 
     if(array_key_exists("blog_id", $_GET)) {
